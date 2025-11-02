@@ -20,13 +20,13 @@ export const AuthContext = ({ children }) => {
             method: "GET",
           }
         );
-        if (!response.ok) {
+        const data = await response.json();
+        if (!response.ok || data.error) {
           localStorage.removeItem("token");
           setUser(null);
           setLoading(false);
           return;
         }
-        const data = await response.json();
         setUser({ token, ...data });
       }
       setLoading(false);
@@ -58,9 +58,29 @@ export const AuthContext = ({ children }) => {
     localStorage.setItem("token", data.token);
   };
 
+  const register = async (email, password, displayName) => {
+    const response = await fetch(
+      `http://${import.meta.env.VITE_API_URL}/api/users/register`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password, displayName }),
+      }
+    );
+    const data = await response.json();
+    if (!response.ok || data.error) {
+      throw new Error(data.error || "Something went wrong");
+    }
+    setUser(data);
+    localStorage.setItem("token", data.token);
+  };
+
   const contextValues = {
     user,
     login,
+    register,
     logout,
     loading,
   };

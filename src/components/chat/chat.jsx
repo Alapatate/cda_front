@@ -61,9 +61,9 @@ export const Chat = () => {
           <AvatarFallback>CDA</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <span className="text-sm font-medium">Support Bot</span>
+          <span className="text-sm font-medium">CDA chat</span>
           <span className="text-xs text-muted-foreground">
-            Typically replies instantly
+            Chat with the CDA team
           </span>
         </div>
       </div>
@@ -106,7 +106,9 @@ export const Chat = () => {
                 </div>
                 {isSelf && (
                   <Avatar className="size-7">
-                    <AvatarFallback>Y</AvatarFallback>
+                    <AvatarFallback className="text-sm">
+                      {user.data.displayName.charAt(0)}
+                    </AvatarFallback>
                   </Avatar>
                 )}
               </div>
@@ -123,6 +125,11 @@ export const Chat = () => {
             className="h-11"
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSendMessage();
+              }
+            }}
           />
           <Button className="h-11 px-5" onClick={handleSendMessage}>
             Send
